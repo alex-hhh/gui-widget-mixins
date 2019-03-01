@@ -1,5 +1,5 @@
-# Azure Pipelines build and test file for ActivityLog2.  The aim is to check
-# that the application builds correctly and automated tests pass.
+# Azure Pipelines build and test file for a Racket Package.  The PACKAGE_NAME
+# variable needs to be updated to the package name.
 
 # YAML schema reference: https://aka.ms/yaml
 
@@ -10,6 +10,7 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 variables:
+  PACKAGE_NAME: "gui-widget-mixins"
   RACKET_DIR: $(Agent.BuildDirectory)/racket
   RACKET_VERSION: 7.2
   DISPLAY: :99.0
@@ -20,12 +21,13 @@ steps:
 - script: bash ./ci/install-racket.sh
   displayName: 'Installing Racket $(RACKET_VERSION)'
 
-  # The build step runs build.rkt which also creates a distribution -- in the
-  # past, creating a distribution has failed due to bad paths in
-  # `define-runtime-path`, so now we do this step as well.
+  # NOTE: the Azure pipelines build process checks out sources in a directory
+  # which is not the package name, as such, we need to be explicit about the
+  # package name when we install it, as raco will infer the name incorrectly.
 
 - script: |
-    $(RACKET_DIR)/bin/raco pkg install --deps search-auto
-    $(RACKET_DIR)/bin/raco setup --check-pkg-deps --pkgs gui-widget-mixins
-    $(RACKET_DIR)/bin/raco test --no-run-if-absent --package gui-widget-mixins
-  displayName: 'Building Application'
+    PATH="$(RACKET_DIR)/bin:$(PATH)"
+    raco pkg install --deps search-auto  --type dir --name $(PACKAGE_NAME)
+    raco setup --check-pkg-deps --pkgs $(PACKAGE_NAME)
+    raco test --no-run-if-absent --package $(PACKAGE_NAME)
+  displayName: 'Building Racket Package'
