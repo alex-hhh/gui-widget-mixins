@@ -1,6 +1,8 @@
 gui-widget-mixins
 =================
 
+[![Build Status](https://dev.azure.com/alexharsanyi0641/gui-widget-mixins/_apis/build/status/alex-hhh.gui-widget-mixins?branchName=master)](https://dev.azure.com/alexharsanyi0641/gui-widget-mixins/_build/latest?definitionId=2&branchName=master)
+
 A small collection of mixin classes to improve the GUI widgets provided by
 Racket.  These mixins be used individually or combined together.  This [blog
 post][bp] describes how these mixins work and this library is an improved

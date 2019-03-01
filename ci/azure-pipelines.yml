@@ -17,7 +17,7 @@ variables:
 
 steps:
 
-- script: bash ./etc/scripts/install-racket.sh
+- script: bash ./ci/install-racket.sh
   displayName: 'Installing Racket $(RACKET_VERSION)'
 
   # The build step runs build.rkt which also creates a distribution -- in the
