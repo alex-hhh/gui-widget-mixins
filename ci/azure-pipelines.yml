@@ -1,0 +1,31 @@
+# Azure Pipelines build and test file for ActivityLog2.  The aim is to check
+# that the application builds correctly and automated tests pass.
+
+# YAML schema reference: https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+variables:
+  RACKET_DIR: $(Agent.BuildDirectory)/racket
+  RACKET_VERSION: 7.2
+  DISPLAY: :99.0
+  PLTSTDERR: 'error warning@optimizer'
+
+steps:
+
+- script: bash ./etc/scripts/install-racket.sh
+  displayName: 'Installing Racket $(RACKET_VERSION)'
+
+  # The build step runs build.rkt which also creates a distribution -- in the
+  # past, creating a distribution has failed due to bad paths in
+  # `define-runtime-path`, so now we do this step as well.
+
+- script: |
+    $(RACKET_DIR)/bin/raco pkg install --deps search-auto
+    $(RACKET_DIR)/bin/raco setup --check-pkg-deps --pkgs gui-widget-mixins
+    $(RACKET_DIR)/bin/raco test --no-run-if-absent --package gui-widget-mixins
+  displayName: 'Building Application'
