@@ -25,6 +25,7 @@
 
 (provide
  decorate-mixin
+ decorate-with
  validate-mixin
  cue-mixin
  tooltip-mixin)

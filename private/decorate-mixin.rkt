@@ -24,7 +24,9 @@
 
 (provide/contract
  (decorate-mixin (-> (-> string? string?) (subclass?/c text-field%)
-                     (subclass?/c text-field%))))
+                     (subclass?/c text-field%)))
+ (decorate-with (->* (string?) (#:validate (or/c #f (-> string? any/c)))
+                     (-> string? string?))))
 
 (define (decorate-mixin decorate base-class)
   (class base-class
@@ -60,3 +62,10 @@
             (super set-value (decorate original)))))
 
     (super-new [init-value (decorate init-value)])))
+
+(define (decorate-with label #:validate [validate-fn #f])
+  (lambda (s)
+    (if (and (> (string-length label) 0)
+             (or (not validate-fn) (validate-fn s)))
+        (string-append s " " label)
+        s)))

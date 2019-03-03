@@ -72,11 +72,8 @@ value.  To continue our previous example, the decorate mixin which adds "m/s"
 to the value entered in the field can be defined like this:
 
 @codeblock{
-(define (decorate s)
-  (if (equal? s "") s (string-append s " m/s")))
-
 (define speed-input
-  (new (decorate-mixin decorate text-field%)
+  (new (decorate-mixin (decorate-with "m/s") text-field%)
        [parent toplevel] [label "Speed "] [init-value "3.5"]))
 }
 
@@ -127,19 +124,16 @@ decorated and validated.  Since most of this functionality is visible when the
 user interacts with the field, there is no screen-shot provided.
 
 @codeblock{
-(define (decorate s)
-  (if (equal? s "") s (string-append s " m/s")))
-
 (define speed-input%
   (tooltip-mixin
    (cue-mixin
     "meters/second"
     (decorate-mixin
-     decorate
+     (decorate-with "m/s" #:validate string->number)
      (validate-mixin
       string->number number->string
       text-field%)))))
-   
+
 (define speed-input
   (new speed-input% [parent toplevel] [label "Speed "]
        [tooltip "Speed in meters/second"]))
@@ -179,6 +173,17 @@ receives a string representing the original contents of the
 @racket[base-class] is the class to extend with the decorate functionality.
 It must be a @racket[text-field%], or an class derived from
 @racket[text-field%]
+
+}
+
+@defproc[(decorate-with (label string?)
+                        (#:validate validate-fn (or/c #f (-> string? any/c)) #f))
+                        (-> string? string?)]{
+
+Return a helper function that can be used as the decorator for a
+@racket[decorate-mixin].  The returned decorator function will append
+@racket[label] to its input string, but only when the input string is not
+empty and passes an optional @racket[validate-fn] function.
 
 }
 
