@@ -1,25 +1,22 @@
-# Azure Pipelines build and test file for a Racket Package.  The PACKAGE_NAME
-# variable needs to be updated to the package name.
+# Azure Pipelines YAML to build and test a Racket Package.  The PACKAGE_NAME
+# variable needs to be updated to reflect the Racket package name that will be
+# built and tested, the rest does not need changing.
 
 # YAML schema reference: https://aka.ms/yaml
-
-trigger:
-- master
 
 pool:
   vmImage: 'Ubuntu-16.04'
 
 variables:
   PACKAGE_NAME: "gui-widget-mixins"
-  RACKET_DIR: $(Agent.BuildDirectory)/racket
   RACKET_VERSION: 7.2
-  DISPLAY: :99.0
+  RACKET_DIR: $(Agent.BuildDirectory)/racket
   PLTSTDERR: 'error warning@optimizer'
 
 steps:
 
 - script: bash ./ci/install-racket.sh
-  displayName: 'Installing Racket $(RACKET_VERSION)'
+  displayName: 'Instal Racket $(RACKET_VERSION)'
 
   # NOTE: the Azure pipelines build process checks out sources in a directory
   # which is not the package name, as such, we need to be explicit about the
@@ -30,4 +27,4 @@ steps:
     raco pkg install --deps search-auto  --type dir --name $(PACKAGE_NAME)
     raco setup --check-pkg-deps --pkgs $(PACKAGE_NAME)
     raco test --no-run-if-absent --package $(PACKAGE_NAME)
-  displayName: 'Building Racket Package'
+  displayName: 'Build and Test $(PACKAGE_NAME)'

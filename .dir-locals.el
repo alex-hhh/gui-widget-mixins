@@ -4,7 +4,7 @@
          (indent-tabs-mode         . nil)
          (require-final-newline    . t)
          (show-trailing-whitespace . t)
-         (ah-project-headline . "gui-widget-mixins -- Mixins to enhance Racket GUI Widgets")
+         (ah-project-headline . "gui-widget-mixins -- tool tips, cue text and validation for text-field% GUI widgets")
          (ah-project-license . lgpl)))
  (yaml-mode . ((mode . goto-address)
                (mode . bug-reference)))

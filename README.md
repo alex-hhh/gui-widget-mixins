@@ -4,9 +4,11 @@ gui-widget-mixins
 [![Build Status](https://dev.azure.com/alexharsanyi0641/racket-packages/_apis/build/status/alex-hhh.gui-widget-mixins?branchName=master)](https://dev.azure.com/alexharsanyi0641/racket-packages/_build/latest?definitionId=2&branchName=master)
 
 A small collection of mixin classes to improve the GUI widgets provided by
-Racket.  These mixins be used individually or combined together.  This [blog
-post][bp] describes how these mixins work and this library is an improved
-version of what is presented there. The following mixins are defined:
+Racket which can be used individually or combined together.  They can be used
+to add tool tips, cue text, validation and decoration to `text-field%` GUI
+controls.  This [blog post][bp] describes how these mixins work and this
+library is an improved version of what is presented there. The following
+mixins are defined:
 
 * `cue-mixin` -- a mixin which will add a cue text to a `text-field%`,
   whenever the field is empty, this can be used to provide a hint for what the
