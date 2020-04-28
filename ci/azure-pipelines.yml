@@ -9,7 +9,7 @@ pool:
 
 variables:
   PACKAGE_NAME: "gui-widget-mixins"
-  RACKET_VERSION: 7.4
+  RACKET_VERSION: 7.6
   RACKET_DIR: $(Agent.BuildDirectory)/racket
   PLTSTDERR: 'error warning@optimizer'
 

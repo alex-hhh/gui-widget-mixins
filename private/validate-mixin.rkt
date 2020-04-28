@@ -3,7 +3,7 @@
 ;; validate-mixin.rkt -- add validation to text-field% objects
 ;;
 ;; This file is part of gui-widget-mixins -- Mixins to enhance Racket GUI Widgets
-;; Copyright (c) 2019 Alex Harsányi <AlexHarsanyi@gmail.com>
+;; Copyright (c) 2019, 2020 Alex Harsányi <AlexHarsanyi@gmail.com>
 ;;
 ;; This program is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU Lesser General Public License as published by
@@ -24,7 +24,7 @@
          racket/contract)
 
 (provide/contract
- (validate-mixin (->* ((-> string? any/c) (-> any/c string) (subclass?/c text-field%))
+ (validate-mixin (->* ((-> string? any/c) (-> any/c string?) (subclass?/c text-field%))
                       (#:allow-empty? boolean?)
                       (subclass?/c text-field%))))
 
