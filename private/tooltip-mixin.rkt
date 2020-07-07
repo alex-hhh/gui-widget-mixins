@@ -3,7 +3,7 @@
 ;; tooltip-mixin.rkt -- add tooltips to GUI widgets
 ;;
 ;; This file is part of gui-widget-mixins -- Mixins to enhance Racket GUI Widgets
-;; Copyright (c) 2019 Alex Harsányi <AlexHarsanyi@gmail.com>
+;; Copyright (c) 2019, 2020 Alex Harsányi <AlexHarsanyi@gmail.com>
 ;;
 ;; This program is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU Lesser General Public License as published by
@@ -121,12 +121,13 @@
 
     (define/override (on-subwindow-event receiver event)
       (case (send event get-event-type)
-        ((enter)
-         (set! mouse-inside-widget? #t))
         ((leave)
          (set! mouse-inside-widget? #f)
          (show-tooltip receiver event #f))
-        ((motion)
+        ((enter motion)
+         ;; NOTE: motion events don't seem to be sent by GTK (Gnome?) see #1
+         (when (equal? 'enter (send event get-event-type))
+           (set! mouse-inside-widget? #t))
          (when mouse-inside-widget?
            (let ((dx (abs (- (send event get-x) popup-x)))
                  (dy (abs (- (send event get-y) popup-y))))
