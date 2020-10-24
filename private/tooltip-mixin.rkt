@@ -70,7 +70,7 @@
   (class base-class
     (init-field [tooltip #f]
                 [tooltip-delay 500])
-    (inherit client->screen get-width is-shown?)
+    (inherit client->screen get-client-size get-width is-shown?)
 
     (define tooltip-window #f)
     (define mouse-inside-widget? #f)
@@ -120,17 +120,26 @@
         (show-tooltip #f #f #f)))
 
     (define/override (on-subwindow-event receiver event)
-      (case (send event get-event-type)
+      (define event-type (send event get-event-type))
+      (case event-type
         ((leave)
          (set! mouse-inside-widget? #f)
          (show-tooltip receiver event #f))
         ((enter motion)
-         ;; NOTE: motion events don't seem to be sent by GTK (Gnome?) see #1
-         (when (equal? 'enter (send event get-event-type))
-           (set! mouse-inside-widget? #t))
+         (define mouse-x (send event get-x))
+         (define mouse-y (send event get-y))
+         (define-values (cw ch) (get-client-size))
+         ;; NOTE: motion events don't seem to be sent by GTK (Gnome?) (see #1)
+         ;; while mouse leave events are sometimes missed on Windows (see #2),
+         ;; so we consider that the mouse is inside the widget if either this
+         ;; is an enter event or if the mouse event coordinates are over the
+         ;; widget.
+         (set! mouse-inside-widget?
+               (or (equal? 'enter event-type)
+                   (and (>= mouse-x 0) (< mouse-x cw) (>= mouse-y 0) (< mouse-y ch))))
          (when mouse-inside-widget?
-           (let ((dx (abs (- (send event get-x) popup-x)))
-                 (dy (abs (- (send event get-y) popup-y))))
+           (let ((dx (abs (- mouse-x popup-x)))
+                 (dy (abs (- mouse-y popup-y))))
              (if (or (>= dx delta-move) (>= dy delta-move))
                  (show-tooltip receiver event
                                (not (and tooltip-window
