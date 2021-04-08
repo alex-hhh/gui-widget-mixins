@@ -7,4 +7,4 @@ significant changes to your pull request, or reject it.
 
 **Don't bother** correcting **spelling mistakes**, extra **white space** or
 **code indentation**.  I will not accept pull requests that contain trivial
-changes, consider creating an issue instead.
+changes.
