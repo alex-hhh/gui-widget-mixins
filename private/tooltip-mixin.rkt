@@ -73,6 +73,16 @@
                           (when (and mouse-inside-widget? (is-shown?))
                             (send tooltip-window show #t)))]))
 
+    ;; `get-display-left-top-inset` is not guaranteed to return 0,0 for
+    ;; monitor 0.  See #3 for a counter example.  Since the offset is only
+    ;; needed on MacOS to account for the menu bar at the top of the screen,
+    ;; we only use this function on that platform (where it seems to work
+    ;; correctly)
+    (define get-offset-fn
+      (if (equal? (system-type 'os) 'macosx)
+          get-display-left-top-inset
+          (lambda () (values 0 0))))
+
     (define/private (position-tooltip receiver event)
       (when tooltip
         (unless tooltip-window
@@ -81,7 +91,7 @@
         (define ey (send event get-y))
         (define twh (send tooltip-window get-height))
         (let-values ([(x y) (send receiver client->screen (+ ex offset) (- ey offset))]
-                     [(dx dy) (get-display-left-top-inset)])
+                     [(dx dy) (get-offset-fn)])
           (send tooltip-window move (- x dx) (- y dy twh)))))
 
     (define/private (show-tooltip receiver event show?)
