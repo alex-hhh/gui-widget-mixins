@@ -193,6 +193,10 @@ Extends @racket[base-class] to display a tooltip when the mouse hovers over
 the control.  The resulting class will have two additional init fields, which
 specify the tooltip and the delay before it shows up.
 
+The tooltip can be dismissed by moving the mouse, and the tooltip will show up
+again after the mouse is moved away from the control and back above the
+control.
+
 @defconstructor/auto-super[([tooltip string?]
                             [tooltip-delay (and/c integer? positive?)])]{
 
