@@ -3,7 +3,7 @@
 ;; validate-mixin.rkt -- add validation to text-field% objects
 ;;
 ;; This file is part of gui-widget-mixins -- Mixins to enhance Racket GUI Widgets
-;; Copyright (c) 2019, 2020, 2021 Alex Harsányi <AlexHarsanyi@gmail.com>
+;; Copyright (c) 2019, 2020, 2021, 2022 Alex Harsányi <AlexHarsanyi@gmail.com>
 
 (require racket/gui/base
          racket/class
@@ -76,12 +76,12 @@
     ;; Trigger a validation of the contents, will update the background
     ;; according to whether the value is valid or not and will invoke
     ;; VALID-CALLBACK with the current validity status.
-    (define/public (validate)
+    (define/public (validate [invoke-callback? #t])
       (let* ([valid? (valid-value? (get-value))]
              [bg-color (if valid? good-bg bad-bg)])
         (when bg-color       ; might be #f early in the initialization process
           (set-field-background bg-color))
-        (when valid-callback
+        (when (and invoke-callback? valid-callback)
           (valid-callback this valid?))))
 
     ;; Intercept keyboard inputs and validate them
@@ -93,7 +93,7 @@
     ;; type we manage.
     (define/override (set-value v)
       (super set-value (if (string? v) v (data->string v)))
-      (validate))
+      (validate #f))
 
     ;; Return a value converted using DATA->STRING, returns #f if the contents
     ;; is invalid and 'empty if the contents are empty and ALLOW-EMPTY? is #t.
@@ -108,5 +108,5 @@
     ;; Initialize the parent class and pass in our own callback.
     (super-new [callback on-callback])
     (set! good-bg (get-field-background)) ; can now retrieve bg color
-    (validate)                            ; must validate initial-value
+    (validate #f)                         ; must validate initial-value
     ))

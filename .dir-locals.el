@@ -3,6 +3,7 @@
          (indent-tabs-mode         . nil)
          (require-final-newline    . t)
          (show-trailing-whitespace . t)
+         (ah-spdx-license . "MIT or Apache-2.0")
          (ah-project-headline . "gui-widget-mixins -- tool tips, cue text and validation for text-field% GUI widgets")
          ))
  (yaml-mode . ((mode . goto-address)
